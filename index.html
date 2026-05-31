@@ -84,73 +84,20 @@
       text-transform: uppercase;
     }
 
-    .login-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 32px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .login-box h2 {
-      font-size: 17px;
-      font-weight: 600;
-      color: var(--text);
-      text-align: center;
-    }
-
-    .field-group {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .field-group label {
-      font-size: 13px;
-      color: var(--muted);
-      font-weight: 500;
-    }
-
-    .field-group input {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      color: var(--text);
-      font-size: 15px;
-      padding: 10px 14px;
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .field-group input:focus {
-      border-color: var(--accent);
-    }
-
     .btn-login {
       background: var(--accent);
       color: #0d1117;
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 700;
       border: none;
-      border-radius: 8px;
-      padding: 12px;
+      border-radius: 10px;
+      padding: 14px 48px;
       cursor: pointer;
       transition: opacity 0.2s, transform 0.1s;
-      width: 100%;
     }
 
     .btn-login:hover { opacity: 0.88; }
-    .btn-login:active { transform: scale(0.98); }
-
-    .error-msg {
-      color: var(--danger);
-      font-size: 13px;
-      text-align: center;
-      min-height: 18px;
-    }
+    .btn-login:active { transform: scale(0.97); }
 
     /* ─── DASHBOARD SCREEN ─────────────────────────────────── */
     #dashboard-screen {
@@ -358,15 +305,7 @@
     <div class="logo-sub">Epitaxial Design & Analysis Suite</div>
   </div>
 
-  <div class="login-box">
-    <h2>Access Portal</h2>
-    <div class="field-group">
-      <label for="pwd-input">Password</label>
-      <input type="password" id="pwd-input" placeholder="Enter password" autocomplete="current-password" />
-    </div>
-    <div class="error-msg" id="error-msg"></div>
-    <button class="btn-login" id="btn-login">Sign In</button>
-  </div>
+  <button class="btn-login" id="btn-login">Enter</button>
 </div>
 
 <!-- ===== DASHBOARD SCREEN ===== -->
@@ -466,15 +405,8 @@
 </div>
 
 <script>
-  const CORRECT_PASSWORD = 'Bill2020Lmy';
-  const SESSION_KEY = 'chyilab_auth';
-
   const loginScreen = document.getElementById('login-screen');
   const dashboardScreen = document.getElementById('dashboard-screen');
-  const pwdInput = document.getElementById('pwd-input');
-  const btnLogin = document.getElementById('btn-login');
-  const btnLogout = document.getElementById('btn-logout');
-  const errorMsg = document.getElementById('error-msg');
 
   function showDashboard() {
     loginScreen.style.display = 'none';
@@ -484,33 +416,10 @@
   function showLogin() {
     loginScreen.style.display = 'flex';
     dashboardScreen.style.display = 'none';
-    pwdInput.value = '';
-    errorMsg.textContent = '';
   }
 
-  function tryLogin() {
-    if (pwdInput.value === CORRECT_PASSWORD) {
-      sessionStorage.setItem(SESSION_KEY, '1');
-      showDashboard();
-    } else {
-      errorMsg.textContent = 'Incorrect password. Please try again.';
-      pwdInput.value = '';
-      pwdInput.focus();
-    }
-  }
-
-  btnLogin.addEventListener('click', tryLogin);
-  pwdInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
-
-  btnLogout.addEventListener('click', () => {
-    sessionStorage.removeItem(SESSION_KEY);
-    showLogin();
-  });
-
-  // Restore session
-  if (sessionStorage.getItem(SESSION_KEY) === '1') {
-    showDashboard();
-  }
+  document.getElementById('btn-login').addEventListener('click', showDashboard);
+  document.getElementById('btn-logout').addEventListener('click', showLogin);
 </script>
 
 </body>
