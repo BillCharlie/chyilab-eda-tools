@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chyilab EDA Tools</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --accent: #58a6ff;
+      --accent2: #3fb950;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --danger: #f85149;
+      --card1: #1c2d3a;
+      --card2: #1a2d1e;
+      --card3: #2d1c2d;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ─── LOGIN SCREEN ─────────────────────────────────────── */
+    #login-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+      width: 100%;
+      max-width: 400px;
+      padding: 24px;
+    }
+
+    .logo-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, #1f4068 0%, #1b262c 100%);
+      border: 2px solid var(--accent);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 24px rgba(88,166,255,0.25);
+    }
+
+    .logo-icon svg {
+      width: 40px;
+      height: 40px;
+    }
+
+    .logo-title {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .logo-sub {
+      font-size: 13px;
+      color: var(--muted);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .login-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .login-box h2 {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+      text-align: center;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field-group label {
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .field-group input {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 15px;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .field-group input:focus {
+      border-color: var(--accent);
+    }
+
+    .btn-login {
+      background: var(--accent);
+      color: #0d1117;
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      width: 100%;
+    }
+
+    .btn-login:hover { opacity: 0.88; }
+    .btn-login:active { transform: scale(0.98); }
+
+    .error-msg {
+      color: var(--danger);
+      font-size: 13px;
+      text-align: center;
+      min-height: 18px;
+    }
+
+    /* ─── DASHBOARD SCREEN ─────────────────────────────────── */
+    #dashboard-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    header {
+      width: 100%;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-logo {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #1f4068 0%, #1b262c 100%);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .header-logo svg { width: 20px; height: 20px; }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 13px;
+      padding: 7px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-logout:hover {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .dashboard-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 24px;
+      gap: 16px;
+      width: 100%;
+      max-width: 960px;
+    }
+
+    .dashboard-heading {
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 16px;
+      align-self: flex-start;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      width: 100%;
+    }
+
+    .tool-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+      transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.2s;
+      border-radius: 14px;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(0,0,0,0.4);
+    }
+
+    .tool-card:hover::before { opacity: 1; }
+    .tool-card:active { transform: translateY(-1px); }
+
+    /* Card color accents */
+    .card-recipe { background: var(--card1); border-color: #2c4a5a; }
+    .card-recipe:hover { border-color: #58a6ff; box-shadow: 0 12px 32px rgba(88,166,255,0.15); }
+
+    .card-layout { background: var(--card2); border-color: #2a4a2e; }
+    .card-layout:hover { border-color: #3fb950; box-shadow: 0 12px 32px rgba(63,185,80,0.15); }
+
+    .card-runcard { background: var(--card3); border-color: #4a2a4a; }
+    .card-runcard:hover { border-color: #d2a8ff; box-shadow: 0 12px 32px rgba(210,168,255,0.15); }
+
+    .card-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-recipe { background: rgba(88,166,255,0.15); }
+    .icon-layout { background: rgba(63,185,80,0.15); }
+    .icon-runcard { background: rgba(210,168,255,0.15); }
+
+    .card-icon svg { width: 28px; height: 28px; }
+
+    .card-content { display: flex; flex-direction: column; gap: 8px; }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .card-arrow {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .arrow-recipe { color: #58a6ff; }
+    .arrow-layout { color: #3fb950; }
+    .arrow-runcard { color: #d2a8ff; }
+
+    footer {
+      width: 100%;
+      text-align: center;
+      padding: 20px;
+      color: var(--muted);
+      font-size: 12px;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div id="login-screen">
+  <div class="logo-wrap">
+    <div class="logo-icon">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="4" width="32" height="32" rx="4" stroke="#58a6ff" stroke-width="1.5"/>
+        <rect x="9" y="9" width="8" height="8" rx="1" fill="#58a6ff" opacity="0.8"/>
+        <rect x="23" y="9" width="8" height="8" rx="1" fill="#3fb950" opacity="0.8"/>
+        <rect x="9" y="23" width="8" height="8" rx="1" fill="#d2a8ff" opacity="0.8"/>
+        <rect x="23" y="23" width="8" height="8" rx="1" fill="#58a6ff" opacity="0.4"/>
+        <line x1="13" y1="17" x2="13" y2="23" stroke="#58a6ff" stroke-width="1.5" opacity="0.6"/>
+        <line x1="27" y1="17" x2="27" y2="23" stroke="#3fb950" stroke-width="1.5" opacity="0.6"/>
+        <line x1="17" y1="13" x2="23" y2="13" stroke="#58a6ff" stroke-width="1.5" opacity="0.6"/>
+        <line x1="17" y1="27" x2="23" y2="27" stroke="#d2a8ff" stroke-width="1.5" opacity="0.6"/>
+      </svg>
+    </div>
+    <div class="logo-title">Chyilab EDA Tools</div>
+    <div class="logo-sub">Epitaxial Design & Analysis Suite</div>
+  </div>
+
+  <div class="login-box">
+    <h2>Access Portal</h2>
+    <div class="field-group">
+      <label for="pwd-input">Password</label>
+      <input type="password" id="pwd-input" placeholder="Enter password" autocomplete="current-password" />
+    </div>
+    <div class="error-msg" id="error-msg"></div>
+    <button class="btn-login" id="btn-login">Sign In</button>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD SCREEN ===== -->
+<div id="dashboard-screen">
+  <header>
+    <div class="header-brand">
+      <div class="header-logo">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="32" height="32" rx="4" stroke="#58a6ff" stroke-width="1.5"/>
+          <rect x="9" y="9" width="8" height="8" rx="1" fill="#58a6ff" opacity="0.8"/>
+          <rect x="23" y="9" width="8" height="8" rx="1" fill="#3fb950" opacity="0.8"/>
+          <rect x="9" y="23" width="8" height="8" rx="1" fill="#d2a8ff" opacity="0.8"/>
+          <rect x="23" y="23" width="8" height="8" rx="1" fill="#58a6ff" opacity="0.4"/>
+        </svg>
+      </div>
+      <span class="header-title">Chyilab EDA Tools</span>
+    </div>
+    <button class="btn-logout" id="btn-logout">Logout</button>
+  </header>
+
+  <div class="dashboard-body">
+    <div class="dashboard-heading">Select a Tool</div>
+
+    <div class="cards-grid">
+
+      <!-- MOCVD Recipe Builder -->
+      <a class="tool-card card-recipe" href="https://epireceipe-builder.up.railway.app/login" target="_blank" rel="noopener">
+        <div class="card-icon icon-recipe">
+          <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 3C14 3 6 7 6 14C6 18.4 9.6 22 14 22C18.4 22 22 18.4 22 14C22 7 14 3 14 3Z" stroke="#58a6ff" stroke-width="1.5" stroke-linejoin="round"/>
+            <circle cx="14" cy="14" r="3" fill="#58a6ff" opacity="0.8"/>
+            <line x1="14" y1="11" x2="14" y2="3" stroke="#58a6ff" stroke-width="1.5" opacity="0.5"/>
+            <line x1="8" y1="22" x2="6" y2="25" stroke="#58a6ff" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+            <line x1="20" y1="22" x2="22" y2="25" stroke="#58a6ff" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/>
+          </svg>
+        </div>
+        <div class="card-content">
+          <div class="card-title">EPI Recipe Builder</div>
+          <div class="card-desc">MOCVD epitaxial growth recipe designer — build, manage, and optimize wafer growth sequences.</div>
+        </div>
+        <div class="card-arrow arrow-recipe">
+          Open Tool
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#58a6ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
+
+      <!-- Layout Assistant -->
+      <a class="tool-card card-layout" href="https://layout-assitant-production.up.railway.app/" target="_blank" rel="noopener">
+        <div class="card-icon icon-layout">
+          <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="3" width="10" height="10" rx="2" stroke="#3fb950" stroke-width="1.5"/>
+            <rect x="15" y="3" width="10" height="10" rx="2" stroke="#3fb950" stroke-width="1.5" opacity="0.6"/>
+            <rect x="3" y="15" width="10" height="10" rx="2" stroke="#3fb950" stroke-width="1.5" opacity="0.6"/>
+            <rect x="15" y="15" width="10" height="10" rx="2" stroke="#3fb950" stroke-width="1.5"/>
+            <line x1="13" y1="8" x2="15" y2="8" stroke="#3fb950" stroke-width="1.5"/>
+            <line x1="8" y1="13" x2="8" y2="15" stroke="#3fb950" stroke-width="1.5"/>
+            <line x1="20" y1="13" x2="20" y2="15" stroke="#3fb950" stroke-width="1.5"/>
+            <line x1="13" y1="20" x2="15" y2="20" stroke="#3fb950" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="card-content">
+          <div class="card-title">Layout Assistant</div>
+          <div class="card-desc">AI-powered semiconductor layout design assistant — interactive session-based design collaboration.</div>
+        </div>
+        <div class="card-arrow arrow-layout">
+          Open Tool
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#3fb950" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
+
+      <!-- Runcard Builder -->
+      <a class="tool-card card-runcard" href="https://billcharlie.github.io/runcard-builder/" target="_blank" rel="noopener">
+        <div class="card-icon icon-runcard">
+          <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="3" width="20" height="22" rx="2" stroke="#d2a8ff" stroke-width="1.5"/>
+            <line x1="8" y1="9" x2="20" y2="9" stroke="#d2a8ff" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="8" y1="13" x2="20" y2="13" stroke="#d2a8ff" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+            <line x1="8" y1="17" x2="16" y2="17" stroke="#d2a8ff" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+            <circle cx="20" cy="20" r="4" fill="#1a0a1a" stroke="#d2a8ff" stroke-width="1.5"/>
+            <path d="M18.5 20L20 18.5L21.5 20L20 21.5L18.5 20Z" fill="#d2a8ff"/>
+          </svg>
+        </div>
+        <div class="card-content">
+          <div class="card-title">Runcard Builder</div>
+          <div class="card-desc">Process runcard generation tool — create structured fabrication step cards for wafer processing.</div>
+        </div>
+        <div class="card-arrow arrow-runcard">
+          Open Tool
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="#d2a8ff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <footer>Chyilab EDA Tools &mdash; Semiconductor Research Suite</footer>
+</div>
+
+<script>
+  const CORRECT_PASSWORD = 'Bill2020Lmy';
+  const SESSION_KEY = 'chyilab_auth';
+
+  const loginScreen = document.getElementById('login-screen');
+  const dashboardScreen = document.getElementById('dashboard-screen');
+  const pwdInput = document.getElementById('pwd-input');
+  const btnLogin = document.getElementById('btn-login');
+  const btnLogout = document.getElementById('btn-logout');
+  const errorMsg = document.getElementById('error-msg');
+
+  function showDashboard() {
+    loginScreen.style.display = 'none';
+    dashboardScreen.style.display = 'flex';
+  }
+
+  function showLogin() {
+    loginScreen.style.display = 'flex';
+    dashboardScreen.style.display = 'none';
+    pwdInput.value = '';
+    errorMsg.textContent = '';
+  }
+
+  function tryLogin() {
+    if (pwdInput.value === CORRECT_PASSWORD) {
+      sessionStorage.setItem(SESSION_KEY, '1');
+      showDashboard();
+    } else {
+      errorMsg.textContent = 'Incorrect password. Please try again.';
+      pwdInput.value = '';
+      pwdInput.focus();
+    }
+  }
+
+  btnLogin.addEventListener('click', tryLogin);
+  pwdInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryLogin(); });
+
+  btnLogout.addEventListener('click', () => {
+    sessionStorage.removeItem(SESSION_KEY);
+    showLogin();
+  });
+
+  // Restore session
+  if (sessionStorage.getItem(SESSION_KEY) === '1') {
+    showDashboard();
+  }
+</script>
+
+</body>
+</html>
