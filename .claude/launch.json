@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "chyilab-eda-tools",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "5200"],
+      "port": 5200
+    }
+  ]
+}
